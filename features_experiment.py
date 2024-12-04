@@ -106,6 +106,10 @@ class ExampleBelugaGymCompatibleDomain(BelugaGymCompatibleDomain):
     @property
     def unload_list(self):
         return self.get_unload_list(self.inital_unloads) #TODO modify as changes thru episode
+    
+    @property
+    def flat_unload_list(self):
+        return self.flattened_unload_list()
     @property
     def load_list(self):
         return self.get_load_list(self.initial_loads) #TODO modify as changes thru episode
@@ -118,6 +122,9 @@ class ExampleBelugaGymCompatibleDomain(BelugaGymCompatibleDomain):
     @property
     def flight_list(self):
         return  self.get_flight_list(self.inital_flight_obj_num)
+    @property
+    def load_priorities(self):
+        return self.get_load_priorities()
     
     def get_load_list(self, initial_loads):
         load_list = {}
@@ -258,13 +265,24 @@ class ExampleBelugaGymCompatibleDomain(BelugaGymCompatibleDomain):
         arg_names = [self.obj_mapping[i] for i in action_args[1:] if i in self.obj_mapping]
         act = self.domain_action_ind_inv[action_args[0]]
         return f"{act} {', '.join(arg_names)}"
+    
+    def get_jig_curr_size(self, jig:str):
+        num = self.obj_mapping_inv[jig]
+        dict_sizes = {k:v for (k,v) in self.current_pddl_state.atoms[self.pred_mapping["size"]]}
+        return dict_sizes[num]
 
 
     def make_state_array(self, pddl_state: SkdBaseDomain.T_state) -> ArrayLike:
         state_array: ArrayLike = np.ones(
             shape=self.true_observation_space.shape, dtype=np.int32
         ) * (-1)
-        l = self.get_load_priorities()
+        rack_spaces = {i[0]:i[1] for i in pddl_state.atoms[self.pred_mapping["free-space"]]}
+        for str_rack,num_rack in self.racks.items():
+            space = rack_spaces[num_rack]
+            size_nxt_h = self.get_jig_curr_size(self.flat_unload_list[0])
+            #size next b ? how do we choose whats next?
+            #TODO p_h
+            
         print("stop")
         return state_array.flatten()
 
