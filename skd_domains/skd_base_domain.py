@@ -257,7 +257,7 @@ class SkdBaseDomain(D):
         self, atoms: Iterable[tuple[str]], fluents: Iterable[tuple[tuple[str], int]]
     ):
         atoms_ = tuple(
-            x for x in (self._deserialize_atom(atom) for atom in atoms) if x is not None
+            x for x in (self._deserialize_atom(atom) for atom in atoms ) if x is not None
         )
         fluents_ = tuple(
             (self._deserialize_fluent_atom(atom), value) for (atom, value) in fluents

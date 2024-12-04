@@ -128,6 +128,5 @@ class BelugaGymEnv(AsGymnasiumEnv):
         )
         super().__init__(
             env_config["domain"],
-            env_config["unwrap_spaces"] if "unwrap_spaces" in env_config else True,
-            env_config["render_mode"] if "render_mode" in env_config else None
+            env_config["unwrap_spaces"] if "unwrap_spaces" in env_config else True
         )

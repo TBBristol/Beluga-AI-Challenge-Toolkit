@@ -1,6 +1,6 @@
 import os
 
-from skdecide import DeterministicPlanningDomain
+from skdecide import DeterministicPlanningDomain, Value, TransitionOutcome
 
 from beluga_lib.beluga_problem import BelugaProblem
 from beluga_lib.problem_state import BelugaProblemState
@@ -49,3 +49,29 @@ class SkdPDDLDomain(SkdBaseDomain, DeterministicPlanningDomain):
         if c != 1:
             self.transition_cost[(memory, action, t)] = c
         return t
+    
+    #####################ADDED MANUALLY###################
+
+    def _state_step(self, action: SkdBaseDomain.T_event) -> TransitionOutcome[
+            SkdBaseDomain.T_state,
+            Value[SkdBaseDomain.T_value],
+            SkdBaseDomain.T_predicate,
+            SkdBaseDomain.T_info,
+        ]:
+            successors = self.succ_gen(
+                self.state.to_plado(self.cost_functions), (action.action_id, action.args)
+            )
+            successor = successors[0][0]
+            t = self._translate_state(successor)
+            c = self._get_cost_from_state(successor)
+            self.state = t
+            return TransitionOutcome(
+                state=self.state,
+                value=Value(cost=c),
+                termination=super()._is_terminal(self.state),
+                info=None,
+            )
+    def _state_reset(self) -> SkdBaseDomain.T_state:
+        self.state = self._translate_state(self.task.initial_state)
+        return self.state
+         
