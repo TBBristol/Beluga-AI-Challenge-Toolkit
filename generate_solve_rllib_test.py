@@ -28,7 +28,7 @@ from skd_domains.skd_base_domain import SkdBaseDomain, PladoState
 from skd_domains.skd_pddl_domain import SkdPDDLDomain
 from skd_domains.skd_ppddl_domain import SkdPPDDLDomain
 from skd_domains.skd_spddl_domain import SkdSPDDLDomain
-from toolkit.skd_domains.skd_gym_domain_tim import BelugaGymCompatibleDomain, BelugaGymEnv
+from skd_domains.skd_gym_domain import BelugaGymCompatibleDomain, BelugaGymEnv
 
 from generate_instance import ProbConfig, main as encode_json
 
